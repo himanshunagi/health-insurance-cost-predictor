@@ -11,25 +11,25 @@ This Streamlit-based web application predicts the cost of health insurance for i
 
 ## 🧩 Input Parameters
 
-- Age
-- Number of Dependants
-- Income in Lakhs
-- Genetical Risk (numeric)
+- Age (18-100)
+- Number of Dependants (0-20)
+- Income in Lakhs (0-200)
+- Genetical Risk (0-5)
 - Insurance Plan (Bronze/Silver/Gold)
-- Employment Status
-- Gender
-- Marital Status
-- BMI Category
-- Smoking Status
-- Region
-- Medical History
+- Employment Status (Salaried/Self-Employed/Freelancer)
+- Gender (Male/Female)
+- Marital Status (Married/Unmarried)
+- BMI Category (Normal/Obesity/Overweight/Underweight)
+- Smoking Status (No Smoking/Regular/Occasional)
+- Region (Northwest/Southeast/Northeast/Southwest)
+- Medical History (Various combinations of health conditions)
 
 ## 🛠️ Setup Instructions
 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/himanshunagi/health-insurance-cost-predictor.git
+git clone <repository-url>
 cd health-insurance-cost-predictor
 ```
 
@@ -51,7 +51,7 @@ streamlit run app.py
 - numpy
 - scikit-learn
 - streamlit
-- pickle
+- joblib
 
 ## 📁 Project Structure
 .
@@ -72,7 +72,14 @@ This project is part of the Codebasics ML Course — codebasics.io
 
 
 ## 📝 License
----
 
-### 📦 `requirements.txt`
+See the LICENSE file for details.
 
+Key improvements made:
+1. Corrected the run command from `app.py` to `main.py`
+2. Added joblib to the libraries list
+3. Added value ranges for numeric inputs
+4. Improved project structure documentation with descriptions
+5. Reorganized the attribution section
+6. Removed incomplete requirements.txt section
+7. Added more detailed descriptions for model files

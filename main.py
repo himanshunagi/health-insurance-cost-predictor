@@ -29,7 +29,8 @@ row4 = st.columns(3)
 
 # Assign inputs to the grid
 with row1[0]:
-    age = st.number_input('Age', min_value=18, step=1, max_value=100)
+    age = st.number_input('Age', min_value=18, step=1, max_value=100,
+                         help="Enter your current age (18-100 years)")
 with row1[1]:
     number_of_dependants = st.number_input('Number of Dependants', min_value=0, step=1, max_value=20)
 with row1[2]:
@@ -72,7 +73,21 @@ input_dict = {
     'Medical History': medical_history
 }
 
-# Button to make prediction
-if st.button('Predict'):
-    prediction = predict(input_dict)
-    st.success(f'Predicted Health Insurance Cost: {prediction}')
+# Create columns for buttons
+button_cols = st.columns([1, 1])
+
+# Add predict button with a unique key
+with button_cols[0]:
+    if st.button('Predict', key='predict_button'):
+        with st.spinner('Calculating insurance cost...'):
+            try:
+                prediction = predict(input_dict)
+                formatted_prediction = f"₹{prediction:,}"
+                st.success(f'Predicted Health Insurance Cost: {formatted_prediction}')
+            except Exception as e:
+                st.error(f'Error during prediction: {str(e)}')
+
+# Add reset button with a unique key
+with button_cols[1]:
+    if st.button('Reset All Fields', key='reset_button'):
+        st.experimental_rerun()

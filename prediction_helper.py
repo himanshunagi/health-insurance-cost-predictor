@@ -3,12 +3,19 @@
 import pandas as pd
 import joblib
 
-model_young = joblib.load("artifacts/model_young.joblib")
-model_rest = joblib.load("artifacts/model_rest.joblib")
-scaler_young = joblib.load("artifacts/scaler_young.joblib")
-scaler_rest = joblib.load("artifacts/scaler_rest.joblib")
+from typing import Dict, Union, Any
 
-def calculate_normalized_risk(medical_history):
+import streamlit as st
+
+def calculate_normalized_risk(medical_history: str) -> float:
+    """Calculate normalized risk score based on medical history.
+    
+    Args:
+        medical_history (str): String containing medical conditions separated by ' & '
+        
+    Returns:
+        float: Normalized risk score between 0 and 1
+    """
     risk_scores = {
         "diabetes": 6,
         "heart disease": 8,
@@ -109,7 +116,23 @@ def handle_scaling(age, df):
 
     return df
 
-def predict(input_dict):
+def predict(input_dict: Dict[str, Any]) -> int:
+    """Predict insurance cost based on input parameters.
+    
+    Args:
+        input_dict (Dict[str, Any]): Dictionary containing all required input parameters
+        
+    Returns:
+        int: Predicted insurance cost
+        
+    Raises:
+        ValueError: If required input parameters are missing or invalid
+    """
+    required_fields = ['Age', 'Medical History', 'Income in Lakhs']
+    missing_fields = [field for field in required_fields if field not in input_dict]
+    if missing_fields:
+        raise ValueError(f"Missing required fields: {', '.join(missing_fields)}")
+        
     input_df = preprocess_input(input_dict)
 
     if input_dict['Age'] <= 25:
@@ -118,3 +141,23 @@ def predict(input_dict):
         prediction = model_rest.predict(input_df)
 
     return int(prediction[0])
+
+
+@st.cache_resource
+def load_models():
+    try:
+        return {
+            'model_young': joblib.load("artifacts/model_young.joblib"),
+            'model_rest': joblib.load("artifacts/model_rest.joblib"),
+            'scaler_young': joblib.load("artifacts/scaler_young.joblib"),
+            'scaler_rest': joblib.load("artifacts/scaler_rest.joblib")
+        }
+    except FileNotFoundError as e:
+        raise RuntimeError(f"Failed to load required model files: {str(e)}")
+
+# Use the cached models
+models = load_models()
+model_young = models['model_young']
+model_rest = models['model_rest']
+scaler_young = models['scaler_young']
+scaler_rest = models['scaler_rest']
